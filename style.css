@@ -1,0 +1,292 @@
+/* Basic Reset and Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Section Styling */
+.section {
+    background-color: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: calc(100% - 20px); /* Adjust for padding */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+}
+
+table thead th {
+    background-color: #eaf2f8;
+    color: #333;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #dde6ed;
+    font-weight: bold;
+}
+
+table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Actions column in payments table */
+#paymentsTable td:last-child {
+    white-space: nowrap; /* Prevents button from wrapping */
+}
+
+#paymentsTable .delete-btn {
+    background-color: #e74c3c;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+#paymentsTable .delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* CSV Upload Specifics */
+#csvFile {
+    margin-right: 10px;
+}
+
+/* Calendar Styling */
+#calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #eaf2f8;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+#calendarHeader h3 {
+    margin: 0;
+    color: #333;
+}
+
+#calendarHeader button {
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #5dade2;
+}
+
+#calendarHeader button:hover {
+    background-color: #3498db;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 days a week */
+    gap: 5px;
+    padding: 10px;
+    border: 1px solid #dde6ed;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.calendar-day-header {
+    background-color: #b3d9ff;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    color: #333;
+}
+
+.calendar-day {
+    min-height: 100px; /* Adjust as needed */
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #fefefe;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.9em;
+    overflow: hidden; /* Hide overflow for payment amount */
+}
+
+.calendar-day.empty {
+    background-color: #f7f7f7;
+    color: #bbb;
+    border: 1px dashed #e0e0e0;
+}
+
+.calendar-day .day-number {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.calendar-day .payment-amount {
+    font-weight: bold;
+    text-align: right;
+    margin-top: auto; /* Pushes amount to the bottom */
+    font-size: 1em;
+}
+
+/* Heatmap colors for calendar days */
+.heatmap-level-0 { background-color: #eaf2f8; color: #555; } /* Lightest - No/Low Payments */
+.heatmap-level-1 { background-color: #d4e6f1; color: #444; } /* Low Payments */
+.heatmap-level-2 { background-color: #aed6f1; color: #333; } /* Medium-Low Payments */
+.heatmap-level-3 { background-color: #85c1e9; color: #222; } /* Medium Payments */
+.heatmap-level-4 { background-color: #5dade2; color: #fff; } /* Medium-High Payments */
+.heatmap-level-5 { background-color: #3498db; color: #fff; } /* High Payments */
+.heatmap-level-6 { background-color: #2874a6; color: #fff; } /* Very High Payments */
+.heatmap-level-7 { background-color: #1a5276; color: #fff; } /* Extremely High Payments */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .form-group {
+        flex-direction: column;
+    }
+
+    .form-group label {
+        width: 100%;
+        text-align: left;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+    }
+
+    table, #paymentsTable thead, #paymentsTable tbody, #paymentsTable th, #paymentsTable td, #paymentsTable tr {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, or the table will be completely hidden for screen readers) */
+    #paymentsTable thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    #paymentsTable tr {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    #paymentsTable td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    #paymentsTable td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    /* Label the data */
+    #paymentsTable td:nth-of-type(1):before { content: "Vendor Name:"; }
+    #paymentsTable td:nth-of-type(2):before { content: "Category:"; }
+    #paymentsTable td:nth-of-type(3):before { content: "Type:"; }
+    #paymentsTable td:nth-of-type(4):before { content: "Amount:"; }
+    #paymentsTable td:nth-of-type(5):before { content: "Date:"; }
+    #paymentsTable td:nth-of-type(6):before { content: "Cheque No.:"; }
+    #paymentsTable td:nth-of-type(7):before { content: "Bank:"; }
+    #paymentsTable td:nth-of-type(8):before { content: "Actions:"; }
+
+    #calendar {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .calendar-day {
+        min-height: 80px;
+        font-size: 0.8em;
+    }
+}

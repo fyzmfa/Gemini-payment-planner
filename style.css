@@ -178,8 +178,8 @@ table tbody tr:hover {
     padding: 10px;
     background-color: #fefefe;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: column; /* Stack children vertically */
+    /* justify-content: space-between; This was removed/adjusted to allow amounts to stack */
     font-size: 0.9em;
     overflow: hidden; /* Hide overflow for payment amount */
 }
@@ -193,16 +193,27 @@ table tbody tr:hover {
 .calendar-day .day-number {
     font-weight: bold;
     font-size: 1.1em;
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* Space below day number */
     color: #444;
 }
 
+/* Specific styles for category amounts */
 .calendar-day .payment-amount {
     font-weight: bold;
-    text-align: right;
-    margin-top: auto; /* Pushes amount to the bottom */
-    font-size: 1em;
+    font-size: 0.95em; /* Slightly smaller for multiple amounts */
+    margin-top: 3px; /* Add some space between amounts */
+    display: block; /* Each amount on its own line */
+    text-align: right; /* Align amounts to the right */
 }
+
+.calendar-day .fmcg-amount {
+    color: #28a745; /* Green for FMCG */
+}
+
+.calendar-day .homeware-amount {
+    color: #ffc107; /* Orange/Yellow for Homeware */
+}
+
 
 /* Heatmap colors for calendar days */
 .heatmap-level-0 { background-color: #eaf2f8; color: #555; } /* Lightest - No/Low Payments */
@@ -286,7 +297,7 @@ table tbody tr:hover {
     }
 
     .calendar-day {
-        min-height: 80px;
-        font-size: 0.8em;
+        min-height: 90px; /* Slightly taller to accommodate two amounts */
+        font-size: 0.75em; /* Smaller font size for amounts */
     }
 }

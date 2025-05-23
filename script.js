@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- Calendar Heatmap Logic ---
+    // --- Calendar Heatmap Logic (MODIFIED) ---
 
     const renderCalendar = () => {
         calendarDiv.innerHTML = ''; // Clear existing calendar
@@ -241,24 +241,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentMonthYearHeader.textContent = new Date(year, month).toLocaleString('en-US', { month: 'long', year: 'numeric' });
 
-        // Get total payments per day for the current month
-        const monthlyPaymentTotals = {}; // { dayOfMonth: totalAmount }
+        // Get category-wise total payments per day for the current month
+        const monthlyCategoryTotals = {}; // { dayOfMonth: { FMCG: amount, Homeware: amount, total: amount } }
         const daysInMonth = new Date(year, month + 1, 0).getDate(); // Last day of current month
 
+        // Initialize monthlyCategoryTotals for all days of the month
+        for (let i = 1; i <= daysInMonth; i++) {
+            monthlyCategoryTotals[i] = { FMCG: 0, Homeware: 0, total: 0 };
+        }
+
         payments.forEach(payment => {
-            const paymentDate = new Date(payment.paymentDate + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
+            const paymentDate = new Date(payment.paymentDate + 'T00:00:00');
             if (paymentDate.getFullYear() === year && paymentDate.getMonth() === month) {
                 const day = paymentDate.getDate();
-                if (monthlyPaymentTotals[day]) {
-                    monthlyPaymentTotals[day] += payment.paymentAmount;
-                } else {
-                    monthlyPaymentTotals[day] = payment.paymentAmount;
+                const category = payment.vendorCategory;
+                const amount = payment.paymentAmount;
+
+                // Ensure the day entry exists before adding amounts
+                if (!monthlyCategoryTotals[day]) {
+                    monthlyCategoryTotals[day] = { FMCG: 0, Homeware: 0, total: 0 };
+                }
+
+                monthlyCategoryTotals[day].total += amount;
+                if (category === 'FMCG') {
+                    monthlyCategoryTotals[day].FMCG += amount;
+                } else if (category === 'Homeware') {
+                    monthlyCategoryTotals[day].Homeware += amount;
                 }
             }
         });
 
-        // Determine max payment for heatmap scaling (only for current month)
-        const maxPaymentForMonth = Math.max(0, ...Object.values(monthlyPaymentTotals));
+        // Determine max *total* payment for heatmap scaling (only for current month)
+        // Extract all 'total' amounts from monthlyCategoryTotals
+        const allDailyTotals = Object.values(monthlyCategoryTotals).map(data => data.total);
+        const maxTotalPaymentForMonth = Math.max(0, ...allDailyTotals);
+
 
         // Add day headers (Sun, Mon, etc.)
         const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -289,14 +306,29 @@ document.addEventListener('DOMContentLoaded', () => {
             dayNumberSpan.textContent = day;
             dayDiv.appendChild(dayNumberSpan);
 
-            const totalAmountForDay = monthlyPaymentTotals[day] || 0;
-            const amountSpan = document.createElement('span');
-            amountSpan.classList.add('payment-amount');
-            amountSpan.textContent = formatCurrency(totalAmountForDay);
-            dayDiv.appendChild(amountSpan);
+            const totalsForDay = monthlyCategoryTotals[day];
+            const totalAmountForDay = totalsForDay.total;
+            const fmcgAmount = totalsForDay.FMCG;
+            const homewareAmount = totalsForDay.Homeware;
 
-            // Apply heatmap class based on totalAmountForDay
-            const heatmapLevel = getHeatmapLevel(totalAmountForDay, maxPaymentForMonth);
+            // Display FMCG amount if > 0
+            if (fmcgAmount > 0) {
+                const fmcgSpan = document.createElement('span');
+                fmcgSpan.classList.add('payment-amount', 'fmcg-amount');
+                fmcgSpan.textContent = `F: ${formatCurrency(fmcgAmount)}`;
+                dayDiv.appendChild(fmcgSpan);
+            }
+
+            // Display Homeware amount if > 0
+            if (homewareAmount > 0) {
+                const homewareSpan = document.createElement('span');
+                homewareSpan.classList.add('payment-amount', 'homeware-amount');
+                homewareSpan.textContent = `H: ${formatCurrency(homewareAmount)}`;
+                dayDiv.appendChild(homewareSpan);
+            }
+
+            // Apply heatmap class based on *total* amount for the day
+            const heatmapLevel = getHeatmapLevel(totalAmountForDay, maxTotalPaymentForMonth);
             dayDiv.classList.add(`heatmap-level-${heatmapLevel}`);
 
             calendarDiv.appendChild(dayDiv);
@@ -304,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const getHeatmapLevel = (amount, maxAmount) => {
-        if (maxAmount === 0) return 0; // No payments at all, all days are level 0
+        if (maxAmount === 0) return 0;
         const percentage = amount / maxAmount;
         if (percentage === 0) return 0;
         if (percentage <= 0.1) return 1;
@@ -313,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (percentage <= 0.6) return 4;
         if (percentage <= 0.8) return 5;
         if (percentage <= 0.95) return 6;
-        return 7; // Highest level
+        return 7;
     };
 
     // Calendar navigation
